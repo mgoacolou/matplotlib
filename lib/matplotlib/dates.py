@@ -219,7 +219,11 @@ def _to_ordinalf(dt):
         dt = dt.astimezone(UTC)
         tzi = UTC
 
-    base = float(dt.toordinal())
+    try:
+        base = float(dt.toordinal())
+    except AttributeError:
+        # try with timedelta
+        base = float(dt.total_seconds() / SEC_PER_DAY)
 
     # If it's sufficiently datetime-like, it will have a `date()` method
     cdate = getattr(dt, 'date', lambda: None)()
